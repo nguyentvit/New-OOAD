@@ -74,19 +74,25 @@ public class View extends JFrame{
 				int timeStart = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
 				int timeEnd = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
 				if(timeStart >= timeEnd)
-				{	System.out.print(check1());
+				{	
 					JOptionPane.showMessageDialog(null, "Thời gian không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 					
 				} else
 					try {
 						if (!check()) {
-							
+							JOptionPane.showMessageDialog(null, "Lịch của bạn đã bị trùng","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+
 						}
 						else {
 							dispose();
-							Appt appt = new Appt();
-							
-							
+							Date date2 = calendar.getDate();
+							DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+							String date1 = dateFormat.format(date2);
+							Ngay i = new Ngay();
+							i.NgayDienRa = date1;
+							i.TgBatDau = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
+							i.TgKetThuc = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
+							Appt appt = new Appt(i);
 							appt.ShowWindow();
 						}
 					} catch (SQLException e1) {
@@ -95,15 +101,31 @@ public class View extends JFrame{
 					}
 				
 			}
-			private String check1()
+			private Boolean check1(String date,int tgBatDau,int tgKetThuc)
 			{
-				Boolean status = true;
+				int i=0;
+				Date date2 = calendar.getDate();
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+				String date1 = dateFormat.format(date2);
+				int tgStart = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
+				int tgEnd = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
 				
-				Date date = calendar.getDate();
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");  
-				String date1 = dateFormat.format(date);
+				if(date1.equals(date))
+				{
+					if(tgStart >= tgBatDau && tgStart < tgKetThuc) {i++;}
+					if(tgEnd > tgKetThuc && tgEnd <= tgKetThuc) {i++;}
+					if(tgStart <= tgBatDau && tgEnd >= tgKetThuc) {
+						i++;
+					}
+					if(i==0)return true;
+					else return false;
+				}
+				else {
+					return true;
+				}
 				
-				return date1;
+				
+				
 			}
 			private boolean check() throws SQLException {
 				
@@ -115,19 +137,23 @@ public class View extends JFrame{
 					//String NgayDienRa,TgBatDau,TgKetThuc;
 					List<Ngay> myList=  new ArrayList<Ngay>();
 					while(result.next())
-					{
+					{ 
 						Ngay i = new Ngay();
 						i.NgayDienRa = result.getString("NgayDienRa");
-						i.TgBatDau = result.getString("TgBatDau");
-						i.TgKetThuc = result.getString("TgKetThuc");
+						i.TgBatDau = Integer.parseInt(result.getString("TgBatDau"));
+						i.TgKetThuc = Integer.parseInt(result.getString("TgKetThuc"));
 						myList.add(i);
 					}
 					for(Ngay i : myList)
 					{
-						
+						if(!check1(i.NgayDienRa,i.TgBatDau,i.TgKetThuc))
+						{
+							
+							return false;
+						}
 					}
 					
-					return status;
+					return true;
 				
 				
 			}

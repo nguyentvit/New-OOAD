@@ -18,6 +18,10 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDayChooser;
+
+import DTO.Ngay;
+import KetNoiCSDL.ConnectionDB;
+
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -25,6 +29,14 @@ import java.awt.event.ActionEvent;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import javax.swing.JRadioButton;
 
 public class Appt extends JFrame {
@@ -35,9 +47,14 @@ public class Appt extends JFrame {
 	JButton btnXacNhan;
 	JRadioButton rdbtnDon,rdbtnNhom;
 	JComboBox cbbToiDa;
-	
+	private Ngay date;
+	Connection con = null;
+	Statement statement = null;
+	ResultSet result = null;
 
-	public Appt() {
+	public Appt(Ngay i) {
+		date = i;
+		setTitle("Thêm cuộc hẹn");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 480, 300);
 		contentPane = new JPanel();
@@ -110,6 +127,30 @@ public class Appt extends JFrame {
 		contentPane.add(rdbtnNhom);
 		
 
+	}
+	private String RandomId() throws SQLException
+	{
+		
+		String Id = "";
+		Boolean status = true;
+		con = ConnectionDB.getConnect();
+		statement = con.createStatement();
+		String query = "select Id_Lich from Lich";
+		result = statement.executeQuery(query);
+		List<String> myList = new ArrayList<String>();
+		while(status)
+		{
+			status = false;
+			Random rand = new Random();
+			Id = Integer.toString(rand.nextInt((100-0)+1)+0);
+			for(String i : myList)
+			{
+				if(i.equals(Id))status=true;
+			}
+		}
+		
+		return Id;
+		
 	}
 	private Boolean checkHopLe()
 	{

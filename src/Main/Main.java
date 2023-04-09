@@ -17,10 +17,10 @@ import View.View;
 public class Main {
 
 	public static void main(String[] args) throws SQLException, ParseException {
-			//KiemTra ui = new KiemTra();
-			//ui.ShowWindow();
-		View ui = new View();
-		ui.ShowWindow();
+			KiemTra ui = new KiemTra();
+			ui.ShowWindow();
+		//View ui = new View();
+		//ui.ShowWindow();
 		 	//String sDate1="31-12-1998";  
 		 	//String sDate2="2003-02-24 15";  
 		   // Date date1=new SimpleDateFormat("yy-MM-dd HH").parse(sDate2);

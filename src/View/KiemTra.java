@@ -37,6 +37,7 @@ public class KiemTra extends JFrame {
 	JButton btnChiTiet;
 
 	public KiemTra() {
+		setTitle("Lịch của bạn");
 		getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
