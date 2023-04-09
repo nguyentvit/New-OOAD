@@ -62,8 +62,11 @@ public class View extends JFrame{
 					
 				}
 				else {
+					dispose();
 					Appt appt = new Appt();
 					appt.setVisible(true);
+					//appt.setSize(480, 300);
+					
 					appt.ShowWindow();
 				}
 				
@@ -74,7 +77,7 @@ public class View extends JFrame{
 	{
 		
 		this.setVisible(true);
-		this.setSize(600, 600);
+		this.setSize(600, 360);
 		this.setLocationRelativeTo(null);
 		
 	}

@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
 
@@ -11,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
@@ -20,110 +22,138 @@ import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import javax.swing.JRadioButton;
 
 public class Appt extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtTenSuKien;
+	private JTextField txtViTri;
+	JButton btnXacNhan;
+	JRadioButton rdbtnDon,rdbtnNhom;
+	JComboBox cbbToiDa;
+	
 
 	public Appt() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 562, 413);
+		setBounds(100, 100, 480, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Event Name");
-		lblNewLabel.setBounds(51, 141, 66, 13);
+		JLabel lblNewLabel = new JLabel("Tên sự kiện:");
+		lblNewLabel.setBounds(51, 55, 85, 13);
 		contentPane.add(lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setBounds(127, 138, 127, 19);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtTenSuKien = new JTextField();
+		txtTenSuKien.setBounds(163, 52, 127, 19);
+		contentPane.add(txtTenSuKien);
+		txtTenSuKien.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(127, 175, 127, 19);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		txtViTri = new JTextField();
+		txtViTri.setBounds(163, 92, 127, 19);
+		contentPane.add(txtViTri);
+		txtViTri.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Location ");
-		lblNewLabel_1.setBounds(51, 178, 45, 13);
+		JLabel lblNewLabel_1 = new JLabel("Vị trí:");
+		lblNewLabel_1.setBounds(51, 95, 66, 13);
 		contentPane.add(lblNewLabel_1);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
-		comboBox.setBounds(331, 260, 113, 21);
-		contentPane.add(comboBox);
+		btnXacNhan = new JButton("Xác nhận");
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("All Day");
-		chckbxNewCheckBox.setBounds(367, 137, 93, 21);
-		contentPane.add(chckbxNewCheckBox);
-		
-		//float [] items = { "12.00", "12.", "Third item", "Fourth item" };
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
-		comboBox_1.setBounds(331, 223, 113, 21);
-		contentPane.add(comboBox_1);
-		//String [] items = { "First item", "Second item", "Third item", "Fourth item" };
-
-		
-		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(127, 223, 127, 19);
-		contentPane.add(dateChooser);
-		
-		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.setBounds(127, 262, 127, 19);
-		contentPane.add(dateChooser_1);
-		
-		JButton btnNewButton = new JButton("Save");
-		btnNewButton.setBounds(261, 321, 85, 21);
-		contentPane.add(btnNewButton);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("End");
-		lblNewLabel_1_1.setBounds(51, 262, 31, 13);
-		contentPane.add(lblNewLabel_1_1);
+		btnXacNhan.setBounds(172, 231, 101, 21);
+		contentPane.add(btnXacNhan);
 		
 		JLabel lblNewLabel_1_2 = new JLabel("");
-		lblNewLabel_1_2.setBounds(51, 262, 45, 13);
+		lblNewLabel_1_2.setBounds(51, 262, 45, 19);
 		contentPane.add(lblNewLabel_1_2);
 		
-		JLabel lblNewLabel_1_1_1 = new JLabel("Start ");
-		lblNewLabel_1_1_1.setBounds(51, 227, 52, 13);
-		contentPane.add(lblNewLabel_1_1_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("DETAIL EVENT");
+		JLabel lblNewLabel_2 = new JLabel("Chi tiết cuộc hẹn");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblNewLabel_2.setBounds(214, 57, 113, 33);
+		lblNewLabel_2.setBounds(201, 9, 147, 33);
 		contentPane.add(lblNewLabel_2);
+		ButtonGroup btngroup = new ButtonGroup();
 		
-		JButton btnInvitePeople = new JButton("Invite people");
-		btnInvitePeople.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				 System.out.println("TEST");
-			       Invite window2 = new Invite();
-			       window2.setVisible(true);
-			       //getContentPane().add(btnInvitePeople, BorderLayout.CENTER);
-			       //pack();
-			}
-			
-		});
-		btnInvitePeople.setBounds(359, 165, 85, 39);
-		contentPane.add(btnInvitePeople);
+		JLabel lblNewLabel_3 = new JLabel("Kiểu cuộc họp:");
+		lblNewLabel_3.setBounds(51, 138, 85, 13);
+		contentPane.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Số người tối đa:");
+		lblNewLabel_4.setBounds(51, 178, 101, 13);
+		contentPane.add(lblNewLabel_4);
+		
+		 cbbToiDa = new JComboBox();
+		cbbToiDa.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
+		cbbToiDa.setBounds(162, 174, 45, 21);
+		contentPane.add(cbbToiDa);
+		
+		ButtonGroup btnGroup = new ButtonGroup();
+		rdbtnDon = new JRadioButton("Đơn");
+		
+		//rdbtnNhom.setSelected(true);
+		rdbtnDon.setBounds(163, 134, 50, 21);
+		
+		
+		rdbtnNhom = new JRadioButton("Nhóm");
+		rdbtnNhom.setSelected(true);
+		rdbtnNhom.setBounds(268, 134, 66, 21);
+		
+		btnGroup.add(rdbtnDon);
+		btnGroup.add(rdbtnNhom);
+		
+		contentPane.add(rdbtnDon);
+		contentPane.add(rdbtnNhom);
 		
 
 	}
+	private Boolean checkHopLe()
+	{
+		Boolean status = true;
+		if(txtTenSuKien.getText().equals(""))
+			{status =false;}
+		if(txtViTri.getText().equals(""))
+			{status = false;}
+		
+		return status;
+	}
+	private void AddControls()
+	{
+		rdbtnDon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cbbToiDa.setEnabled(false);
+			}});
+		rdbtnNhom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cbbToiDa.setEnabled(true);
+			}});
+		btnXacNhan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if(!checkHopLe())
+				{
+					JOptionPane.showMessageDialog(null, "Thông tin không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+
+				}
+				else {
+					dispose();
+					ThongTin tt = new ThongTin();
+					tt.ShowWindow();
+				}
+			}
+		});
+	}
 	public void ShowWindow()
 	{
+		AddControls();
 		this.setVisible(true);
-		this.setSize(600, 600);
+		this.setSize(480, 300);
 		this.setLocationRelativeTo(null);
+		
 		
 	}
 }
