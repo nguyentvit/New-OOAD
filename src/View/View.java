@@ -62,9 +62,9 @@ public class View extends JFrame{
 					
 				}
 				else {
-					View1 view1 = new View1();
-					view1.setVisible(true);
-					view1.ShowWindow();
+					Appt appt = new Appt();
+					appt.setVisible(true);
+					appt.ShowWindow();
 				}
 				
 			}
