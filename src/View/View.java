@@ -15,13 +15,14 @@ public class View extends JFrame{
 	JButton btnXacNhan;
 	JCalendar calendar;
 	JComboBox cbbTimeStart,cbbTimeEnd;
+	JButton btnKiemTra;
 	public View() {
 		getContentPane().setLayout(null);
 		
 		btnXacNhan = new JButton("Xác nhận");
 		
 		
-		btnXacNhan.setBounds(245, 270, 89, 23);
+		btnXacNhan.setBounds(154, 271, 89, 23);
 		getContentPane().add(btnXacNhan);
 		
 		 calendar = new JCalendar();
@@ -45,6 +46,11 @@ public class View extends JFrame{
 		JLabel lblNewLabel_1 = new JLabel("Thời gian kết thúc:");
 		lblNewLabel_1.setBounds(311, 59, 112, 13);
 		getContentPane().add(lblNewLabel_1);
+		
+		 btnKiemTra = new JButton("Kiểm tra");
+		
+		btnKiemTra.setBounds(301, 272, 85, 21);
+		getContentPane().add(btnKiemTra);
 		AddEvents();
 		
 		
@@ -64,12 +70,19 @@ public class View extends JFrame{
 				else {
 					dispose();
 					Appt appt = new Appt();
-					appt.setVisible(true);
-					//appt.setSize(480, 300);
+					
 					
 					appt.ShowWindow();
 				}
 				
+			}
+		});
+		btnKiemTra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				KiemTra ui = new KiemTra();
+				
+				ui.ShowWindow();
 			}
 		});
 	}

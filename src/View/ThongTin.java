@@ -126,6 +126,7 @@ public class ThongTin extends JFrame{
 		AddControls();
 		this.setVisible(true);
 		this.setSize(450,300);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
 	}
