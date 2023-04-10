@@ -26,14 +26,18 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class View extends JFrame{
-	JButton btnXacNhan;
-	JCalendar calendar;
-	JComboBox cbbTimeStart,cbbTimeEnd;
-	Connection con = null;
-	Statement statement = null;
-	ResultSet result = null;
+	private JButton btnXacNhan;
+	private JCalendar calendar;
+	private JComboBox cbbTimeStart,cbbTimeEnd;
+	private Connection con = null;
+	private Statement statement = null;
+	private ResultSet result = null;
 	private JButton btnTroVe;
-	public View() {
+	private Boolean thaydoi;
+	private String idl;
+	public View(String idl,Boolean thaydoi) {
+		this.idl = idl;
+		this.thaydoi = thaydoi;
 		getContentPane().setLayout(null);
 		
 		btnXacNhan = new JButton("Xác nhận");
@@ -86,36 +90,92 @@ public class View extends JFrame{
 	
 	public void AddEvents()
 	{
+		if(thaydoi == true)
+		{
+			btnTroVe.setVisible(false);
+		}
 		btnXacNhan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int timeStart = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
-				int timeEnd = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
-				if(timeStart >= timeEnd)
-				{	
-					JOptionPane.showMessageDialog(null, "Thời gian không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-					
-				} else
-					try {
-						if (!check()) {
-							JOptionPane.showMessageDialog(null, "Lịch của bạn đã bị trùng","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+				if(thaydoi == false)
+				{
+					int timeStart = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
+					int timeEnd = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
+					if(timeStart >= timeEnd)
+					{	
+						JOptionPane.showMessageDialog(null, "Thời gian không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						
+					} else
+						try {
+							if (!check()) {
+								JOptionPane.showMessageDialog(null, "Lịch của bạn đã bị trùng","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 
+							}
+							else {
+								dispose();
+								Date date2 = calendar.getDate();
+								DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+								String date1 = dateFormat.format(date2);
+								Ngay i = new Ngay();
+								i.NgayDienRa = date1;
+								i.TgBatDau = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
+								i.TgKetThuc = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
+								Appt appt = new Appt(i,null,true);
+								appt.ShowWindow();
+							}
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
-						else {
-							dispose();
-							Date date2 = calendar.getDate();
-							DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
-							String date1 = dateFormat.format(date2);
-							Ngay i = new Ngay();
-							i.NgayDienRa = date1;
-							i.TgBatDau = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
-							i.TgKetThuc = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
-							Appt appt = new Appt(i,null,true);
-							appt.ShowWindow();
+				}
+				else {
+					int timeStart = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
+					int timeEnd = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
+					if(timeStart >= timeEnd)
+					{	
+						JOptionPane.showMessageDialog(null, "Thời gian không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						
+					} else
+						try {
+							if (!check()) {
+								JOptionPane.showMessageDialog(null, "Lịch của bạn đã bị trùng","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+
+							}
+							else {
+								dispose();
+								Date date2 = calendar.getDate();
+								DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+								String date1 = dateFormat.format(date2);
+								Ngay i = new Ngay();
+								i.NgayDienRa = date1;
+								i.TgBatDau = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
+								i.TgKetThuc = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
+								con = ConnectionDB.getConnect();
+								statement = con.createStatement();
+								String query = String.format("update Lich set NgayDienRa = '%s',TgBatDau = '%s',TgKetThuc = '%s' where Id_Lich = %s",i.NgayDienRa,i.TgBatDau,i.TgKetThuc,idl);
+								statement.executeUpdate(query);
+								int result2 = JOptionPane.showConfirmDialog(null,"Bạn có muốn thay đổi thông tin chi tiết không","Thông báo",JOptionPane.YES_NO_OPTION);
+								if(result2 == JOptionPane.YES_OPTION)
+								{
+									dispose();
+									Appt appt = new Appt(null,idl,false);
+									appt.ShowWindow();
+								}
+								else {
+									dispose();
+									KiemTra kt = new KiemTra();
+									kt.ShowWindow();
+								}
+								
+							}
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				
+				
+				
+				}
+				
 				
 			}
 			private Boolean check1(String date,int tgBatDau,int tgKetThuc)
@@ -146,10 +206,17 @@ public class View extends JFrame{
 			}
 			private boolean check() throws SQLException {
 				
-					Boolean status = true;
+					
 					con = ConnectionDB.getConnect();
 					statement = con.createStatement();
-					String query = "select NgayDienRa,TgBatDau,TgKetThuc from Lich";
+					String query;
+					if(thaydoi == false)
+					{
+						query = "select NgayDienRa,TgBatDau,TgKetThuc from Lich";
+					}
+					else {
+						query = "select NgayDienRa,TgBatDau,TgKetThuc from Lich where Id_Lich != " + idl;
+					}
 					result = statement.executeQuery(query);
 					//String NgayDienRa,TgBatDau,TgKetThuc;
 					List<Ngay> myList=  new ArrayList<Ngay>();

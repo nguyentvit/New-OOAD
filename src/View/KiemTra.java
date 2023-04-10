@@ -132,7 +132,7 @@ public class KiemTra extends JFrame {
 		btnThem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				View ui = new View();
+				View ui = new View(null,false);
 				ui.ShowWindow();
 			}
 		});
@@ -213,10 +213,12 @@ public class KiemTra extends JFrame {
 				try {
 					int value = table.getSelectedRow();
 					String id = table.getModel().getValueAt(value, 1).toString();
-					Appt at = new Appt(null,id,false);
-					at.ShowWindow();
-					HienThiThongTien();
-				} catch (SQLException e1) {
+					View view = new View(id,true);
+					view.ShowWindow();
+					//Appt at = new Appt(null,id,false);
+					//at.ShowWindow();
+					
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}

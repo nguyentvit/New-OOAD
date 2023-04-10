@@ -201,6 +201,24 @@ public class Appt extends JFrame {
 							String TgKetThuc = Integer.toString(date.TgKetThuc);
 							String query = String.format("insert into Lich values ('%s',N'%s',N'%s','%s','%s','%s','%s','%s')",id,TenSuKien,ViTri,NgayDienRa,TgBatDau,TgKetThuc,KieuNhom,ToiDa );
 							statement.executeUpdate(query);
+							int option = 0;
+							option = JOptionPane.showConfirmDialog(null, "Bạn có muốn thêm thành viên không","Thông báo",JOptionPane.YES_NO_OPTION);
+							if(option == JOptionPane.OK_OPTION)
+							{
+								dispose();
+								ThongTin tt = new ThongTin(id1);
+								tt.ShowWindow();
+							}
+							else {
+								dispose();
+								KiemTra kt = new KiemTra();
+								try {
+									kt.ShowWindow();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
 							
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
@@ -208,24 +226,7 @@ public class Appt extends JFrame {
 						}
 						
 						
-						int option = 0;
-						option = JOptionPane.showConfirmDialog(null, "Thông tin không hợp lệ","Thông báo",JOptionPane.YES_NO_OPTION);
-						if(option == JOptionPane.OK_OPTION)
-						{
-							dispose();
-							ThongTin tt = new ThongTin(id1);
-							tt.ShowWindow();
-						}
-						else {
-							dispose();
-							KiemTra kt = new KiemTra();
-							try {
-								kt.ShowWindow();
-							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
+						
 						
 					}
 				}

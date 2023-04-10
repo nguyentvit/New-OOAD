@@ -17,7 +17,7 @@ import View.View;
 public class Main {
 
 	public static void main(String[] args) throws SQLException, ParseException {
-			View ui = new View();
+			View ui = new View(null,false);
 			ui.ShowWindow();
 		
 		//View ui = new View();
