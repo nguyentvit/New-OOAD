@@ -6,19 +6,33 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextField;
+
+import KetNoiCSDL.ConnectionDB;
+
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 
 public class ThongTin extends JFrame{
 	private JTextField txtTen;
 	private JTextField txtSdt;
-	private JTextField txtTuoi;
 	JRadioButton rdbtnNam,rdbtnNu;
 	JButton btnXacNhan;
-	public ThongTin() {
+	private String idLich;
+	private Connection con = null;
+	private Statement statement = null;
+	private ResultSet result = null;
+	public ThongTin(String id) {
+		idLich = id;
 		getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Thông tin người đặt");
@@ -37,10 +51,6 @@ public class ThongTin extends JFrame{
 		JLabel lblNewLabel_3 = new JLabel("Giới tính:");
 		lblNewLabel_3.setBounds(10, 137, 77, 13);
 		getContentPane().add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_4 = new JLabel("Tuổi:");
-		lblNewLabel_4.setBounds(10, 185, 77, 13);
-		getContentPane().add(lblNewLabel_4);
 		
 		txtTen = new JTextField();
 		txtTen.setBounds(97, 48, 96, 19);
@@ -65,15 +75,35 @@ public class ThongTin extends JFrame{
 		getContentPane().add(rdbtnNam);
 		getContentPane().add(rdbtnNu);
 		
-		txtTuoi = new JTextField();
-		txtTuoi.setBounds(97, 182, 37, 19);
-		getContentPane().add(txtTuoi);
-		txtTuoi.setColumns(10);
-		
 		 btnXacNhan = new JButton("Xác nhận");
 		
-		btnXacNhan.setBounds(189, 232, 96, 21);
+		
+		btnXacNhan.setBounds(185, 179, 96, 21);
 		getContentPane().add(btnXacNhan);
+		
+	}
+	private String RandomId() throws SQLException
+	{
+		
+		String Id = "";
+		Boolean status = true;
+		con = ConnectionDB.getConnect();
+		statement = con.createStatement();
+		String query = "select Id_Nguoi from Nguoi";
+		result = statement.executeQuery(query);
+		List<String> myList = new ArrayList<String>();
+		while(status)
+		{
+			status = false;
+			Random rand = new Random();
+			Id = Integer.toString(rand.nextInt((100-0)+1)+0);
+			for(String i : myList)
+			{
+				if(i.equals(Id))status=true;
+			}
+		}
+		
+		return Id;
 		
 	}
 	private Boolean checkHopLe()
@@ -87,10 +117,7 @@ public class ThongTin extends JFrame{
 		{
 			status = false;
 		}
-		if(txtTuoi.getText().equals(""))
-		{
-			status = false;
-		}
+		
 		
 		
 		return status;
@@ -106,17 +133,28 @@ public class ThongTin extends JFrame{
 
 				}
 				else {
-					try{
-			            int Tuoi = Integer.parseInt(txtTuoi.getText());
+					
+			           
+			            try {
+							con = ConnectionDB.getConnect();
+							statement = con.createStatement();
+							String ten = txtTen.getText();
+					        String sdt = txtSdt.getText();
+					        String gt = (rdbtnNam.isSelected())?"0":"1";
+					        String id = RandomId();
+					        
+					        String query = String.format("insert into Nguoi values ('%s','%s',N'%s','%s','%s')",id,idLich,ten,sdt,gt);
+					        statement.executeUpdate(query);
+					        dispose();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 			            
 			            
-			        }
-			        catch (NumberFormatException ex){
-						JOptionPane.showMessageDialog(null, "Tuổi không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-
-			        	//ex.getMessage();
-			            //ex.printStackTrace();
-			        }
+			            
+			            
+			        
 				}
 			}
 		});
@@ -125,7 +163,7 @@ public class ThongTin extends JFrame{
 	{
 		AddControls();
 		this.setVisible(true);
-		this.setSize(450,300);
+		this.setSize(450,250);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		

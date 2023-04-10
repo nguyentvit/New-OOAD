@@ -17,8 +17,9 @@ import View.View;
 public class Main {
 
 	public static void main(String[] args) throws SQLException, ParseException {
-			KiemTra ui = new KiemTra();
+			View ui = new View();
 			ui.ShowWindow();
+		
 		//View ui = new View();
 		//ui.ShowWindow();
 		 	//String sDate1="31-12-1998";  

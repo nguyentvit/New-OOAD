@@ -22,6 +22,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ChiTiet extends JFrame {
 
@@ -29,11 +32,15 @@ public class ChiTiet extends JFrame {
 	private JTable table;
 	private String id;
 	private DefaultTableModel dtm;
+	private JButton btnTroVe,btnXoaThanhVien;
 	private JLabel lblTenSuKien,lblTgBatDau,lblTgKetThuc,lblNgayDienRa,lblViTri;
+	private Connection con = null;
+	private Statement statement = null;
+	private ResultSet result = null;
 	public ChiTiet(String k) {
 		id = k;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 514, 368);
+		setBounds(100, 100, 514, 406);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -50,7 +57,7 @@ public class ChiTiet extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		lblTenSuKien = new JLabel("Hello kitty");
-		lblTenSuKien.setBounds(117, 68, 129, 14);
+		lblTenSuKien.setBounds(117, 68, 153, 14);
 		contentPane.add(lblTenSuKien);
 		
 		JLabel lblNewLabel_3 = new JLabel("Ngày diễn ra:");
@@ -103,13 +110,55 @@ public class ChiTiet extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		
 		 lblViTri = new JLabel("New label");
-		lblViTri.setBounds(115, 102, 46, 14);
+		lblViTri.setBounds(115, 102, 155, 14);
 		contentPane.add(lblViTri);
+		
+		btnTroVe = new JButton("Trở về");
+		btnTroVe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				KiemTra ui = new KiemTra();
+				try {
+					ui.ShowWindow();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		btnTroVe.setBounds(35, 11, 89, 23);
+		contentPane.add(btnTroVe);
+		
+		 btnXoaThanhVien = new JButton("Xóa Thành Viên");
+		 btnXoaThanhVien.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+		 		
+				try {
+					int value = table.getSelectedRow();
+					String id = table.getModel().getValueAt(value, 1).toString();
+					con = ConnectionDB.getConnect();
+					statement = con.createStatement();
+					String query = "delete from Nguoi where Id_Nguoi = " + id;
+					statement.executeUpdate(query);
+					HienThiTT();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		 		
+		 		
+		 	}
+		 });
+		 
+		 btnXoaThanhVien.setBounds(35, 333, 158, 23);
+		contentPane.add(btnXoaThanhVien);
 		
 		
 	}
 	private void HienThiTT() throws SQLException
 	{
+		dtm.setRowCount(0);
 		Connection con = ConnectionDB.getConnect();
 		Statement statement = con.createStatement();
 		Statement statement1 = con.createStatement();
@@ -136,7 +185,7 @@ public class ChiTiet extends JFrame {
 			vec.add(result.getString("Id_Nguoi"));
 			vec.add(result.getString("Ten"));
 			vec.add(result.getString("Sdt"));
-			String gt = (result.getString("Gender").equals("0"))?"Nam":"Nu";
+			String gt = (result.getString("Gender").equals("0"))?"Nam":"Nữ";
 			vec.add(gt);
 			dtm.addRow(vec);
 			

@@ -32,36 +32,53 @@ public class View extends JFrame{
 	Connection con = null;
 	Statement statement = null;
 	ResultSet result = null;
+	private JButton btnTroVe;
 	public View() {
 		getContentPane().setLayout(null);
 		
 		btnXacNhan = new JButton("Xác nhận");
 		
 		
-		btnXacNhan.setBounds(242, 269, 89, 23);
+		btnXacNhan.setBounds(215, 269, 89, 23);
 		getContentPane().add(btnXacNhan);
 		
 		calendar = new JCalendar();
-		calendar.setBounds(10, 10, 272, 202);
+		calendar.setBounds(10, 36, 272, 202);
 		getContentPane().add(calendar);
 		
 		cbbTimeStart = new JComboBox();
 		cbbTimeStart.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"}));
-		cbbTimeStart.setBounds(433, 10, 82, 21);
+		cbbTimeStart.setBounds(429, 32, 82, 21);
 		getContentPane().add(cbbTimeStart);
 		
 		 cbbTimeEnd = new JComboBox();
 		cbbTimeEnd.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"}));
-		cbbTimeEnd.setBounds(433, 55, 82, 21);
+		cbbTimeEnd.setBounds(429, 68, 82, 21);
 		getContentPane().add(cbbTimeEnd);
 		
 		JLabel lblNewLabel = new JLabel("Thời gian bắt đầu:");
-		lblNewLabel.setBounds(311, 14, 110, 13);
+		lblNewLabel.setBounds(309, 36, 110, 13);
 		getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Thời gian kết thúc:");
-		lblNewLabel_1.setBounds(311, 59, 112, 13);
+		lblNewLabel_1.setBounds(307, 73, 112, 13);
 		getContentPane().add(lblNewLabel_1);
+		
+		btnTroVe = new JButton("Lịch Chi Tiết");
+		btnTroVe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				KiemTra ui = new KiemTra();
+				try {
+					ui.ShowWindow();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnTroVe.setBounds(10, 2, 119, 23);
+		getContentPane().add(btnTroVe);
 		AddEvents();
 		
 		
@@ -92,7 +109,7 @@ public class View extends JFrame{
 							i.NgayDienRa = date1;
 							i.TgBatDau = Integer.parseInt(cbbTimeStart.getSelectedItem().toString());
 							i.TgKetThuc = Integer.parseInt(cbbTimeEnd.getSelectedItem().toString());
-							Appt appt = new Appt(i);
+							Appt appt = new Appt(i,null,true);
 							appt.ShowWindow();
 						}
 					} catch (SQLException e1) {

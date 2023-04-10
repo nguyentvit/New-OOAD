@@ -51,8 +51,11 @@ public class Appt extends JFrame {
 	Connection con = null;
 	Statement statement = null;
 	ResultSet result = null;
-
-	public Appt(Ngay i) {
+	private Boolean them;
+	private String idl;
+	public Appt(Ngay i,String idl,Boolean them) {
+		this.idl = idl;
+		this.them = them;
 		date = i;
 		setTitle("Thêm cuộc hẹn");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -174,17 +177,102 @@ public class Appt extends JFrame {
 			}});
 		btnXacNhan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				if(!checkHopLe())
+				if(them == true)
 				{
-					JOptionPane.showMessageDialog(null, "Thông tin không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+					if(!checkHopLe())
+					{
+						JOptionPane.showMessageDialog(null, "Thông tin không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
 
+					}
+					else {
+						String id1 = "";
+						//JOptionPane.showMessageDialog(null, "Thông tin không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+						try {
+							con = ConnectionDB.getConnect();
+							statement = con.createStatement();
+							String id = RandomId();
+							id1 = id;
+							String TenSuKien = txtTenSuKien.getText();
+							String ViTri = txtViTri.getText();
+							String KieuNhom = (rdbtnDon.isSelected())?"0":"1";
+							String ToiDa = (rdbtnDon.isSelected())?"1":cbbToiDa.getSelectedItem().toString();
+							String NgayDienRa = date.NgayDienRa;
+							String TgBatDau = Integer.toString(date.TgBatDau);
+							String TgKetThuc = Integer.toString(date.TgKetThuc);
+							String query = String.format("insert into Lich values ('%s',N'%s',N'%s','%s','%s','%s','%s','%s')",id,TenSuKien,ViTri,NgayDienRa,TgBatDau,TgKetThuc,KieuNhom,ToiDa );
+							statement.executeUpdate(query);
+							
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						
+						int option = 0;
+						option = JOptionPane.showConfirmDialog(null, "Thông tin không hợp lệ","Thông báo",JOptionPane.YES_NO_OPTION);
+						if(option == JOptionPane.OK_OPTION)
+						{
+							dispose();
+							ThongTin tt = new ThongTin(id1);
+							tt.ShowWindow();
+						}
+						else {
+							dispose();
+							KiemTra kt = new KiemTra();
+							try {
+								kt.ShowWindow();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						
+					}
 				}
 				else {
-					dispose();
-					ThongTin tt = new ThongTin();
-					tt.ShowWindow();
+					if(!checkHopLe())
+					{
+						JOptionPane.showMessageDialog(null, "Thông tin không hợp lệ","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+
+					}
+					else {
+						try {
+							con = ConnectionDB.getConnect();
+							statement = con.createStatement();
+							String query = "select count(*) as SoNguoi from Nguoi where Id_Lich = " + idl;
+							result = statement.executeQuery(query);
+							int SoNguoi = 0;
+							while(result.next())
+							{
+								SoNguoi = Integer.parseInt(result.getString("SoNguoi"));
+							}
+							if(Integer.parseInt(cbbToiDa.getSelectedItem().toString()) < SoNguoi)
+							{
+								JOptionPane.showMessageDialog(null, "Số người thay đổi ít hơn số người hiện có","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+
+							}
+							else {
+								String ten = txtTenSuKien.getText();
+								String vitri = txtViTri.getText();
+								String kieunhom = (rdbtnDon.isSelected())?"0":"1";
+								String toida = cbbToiDa.getSelectedItem().toString();
+								statement = con.createStatement();
+								String query1 = String.format("update Lich set TenSuKien = N'%s',ViTri = N'%s',KieuNhom = '%s',ToiDa = '%s' where Id_Lich = %s",ten,vitri,kieunhom,toida,idl);
+								statement.executeUpdate(query1);
+								dispose();
+							}
+							
+						
+							
+						
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					
 				}
+				
 			}
 		});
 	}
